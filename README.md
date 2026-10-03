@@ -32,9 +32,6 @@ Notas de diseño:
 - El deudor queda atado al registro: el oráculo atestigua qué dirección corresponde al RUT receptor del DTE
   (en la demo, el backend lo mapea). Solo esa dirección puede pagar; nadie más puede cerrar la factura.
 
-## Correr local
-Requisitos: Rust, target `wasm32v1-none`, [stellar-cli](https://developers.stellar.org/docs/tools/cli) >= 25.2.0.
-
 ## Frontend
 
 Tres vistas por rol, con conexión a **Freighter** (red Testnet):
