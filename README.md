@@ -35,30 +35,14 @@ Notas de diseño:
 ## Correr local
 Requisitos: Rust, target `wasm32v1-none`, [stellar-cli](https://developers.stellar.org/docs/tools/cli) >= 25.2.0.
 
-```bash
-cargo test -p invoice-factoring      # 23 tests
-stellar contract build               # genera el .wasm
-```
-
 ## Frontend
-```bash
-cd frontend && npm install
-npm run dev         # http://localhost:3000  (NEXT_PUBLIC_BACKEND_URL, por defecto http://localhost:8787)
-npm test            # formato y cálculo de rendimiento
-```
+
 Tres vistas por rol, con conexión a **Freighter** (red Testnet):
 - **Pyme:** sube el XML → datos extraídos → elige el descuento → registra (firma con Freighter) → sigue el estado de sus facturas.
 - **Inversionista:** marketplace de facturas abiertas (monto, vencimiento, precio, rendimiento anualizado) → financia.
 - **Deudor:** facturas por pagar → paga.
 Cada factura muestra su línea de tiempo con los eventos del contrato y enlaces a stellar.expert. Montos en USDCt con su equivalente aproximado en CLP.
 
-## Backend (oráculo)
-```bash
-cd backend && npm install
-npm test            # 30 tests
-npm run dev         # lee ../.env (lo genera scripts/setup-testnet.sh)
-npm run seed        # precarga el marketplace con los 4 XML de ejemplo (requiere testnet)
-```
 | Endpoint | Qué hace |
 |---|---|
 | `POST /invoices/parse` `{xml}` | Extrae RUT emisor/receptor, tipo, folio, monto y fechas del DTE (tipo 33); calcula `invoice_hash = sha256(rutEmisor\|tipoDTE\|folio)`; valida y estima el monto en USDCt |
@@ -76,12 +60,7 @@ Flujo de registro: la pyme sube el XML → `prepare` → firma con su wallet →
 - El parser rechaza `DOCTYPE`/`ENTITY` (sin XXE) y XML de más de 1 MB.
 
 ## Despliegue en testnet
-```bash
-./scripts/setup-testnet.sh          # compila, crea cuentas demo, token USDCt (+SAC), despliega e inicializa
-cd backend && npm run seed          # registra los 4 XML de ejemplo (flujo real: oráculo + emisor)
-npm run faucet -- INVESTOR 40000    # recarga USDCt a una cuenta demo (PYME | INVESTOR | DEBTOR)
-npm run e2e:testnet                 # prueba el ciclo completo contra la red (fund, repay, errores, eventos)
-```
+
 - `setup-testnet.sh` usa el SDK de JavaScript (no el CLI, que en algunos entornos con proxy no sale a la red) y escribe
   todo en `.env` (ignorado por git; solo claves de testnet). Requiere `stellar-cli` >= 25.2.0 únicamente para compilar el wasm.
 - Reejecutarlo reutiliza cuentas y token, y despliega un contrato nuevo (marketplace vacío: vuelve a correr `npm run seed`).
