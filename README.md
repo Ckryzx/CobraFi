@@ -12,15 +12,6 @@ el pago al vencimiento vía smart contract.
 - **Capital global** con comisiones mínimas y liquidación en segundos.
 - **Rampas fiat** vía anchors SEP-24/SEP-31; escalable a otros países cambiando el validador.
 
-## Estructura
-```
-contracts/invoice_factoring   Smart contract Soroban (Rust)
-backend                       API Node/TS: parser DTE + oráculo         (listo, ver abajo)
-frontend                      Next.js + Tailwind (3 vistas por rol)
-scripts                       Deploy a testnet, token de prueba, cuentas demo
-docs                          Arquitectura (diagramas) y guion de demo
-```
-
 ## Contrato
 Estados: `Registered -> Funded -> Repaid` (o `Defaulted`).
 
