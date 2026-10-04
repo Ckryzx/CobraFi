@@ -1,15 +1,149 @@
 @import "tailwindcss";
 
+/* Sistema de diseño CobraFi: oscuro cálido (negro cálido + ámbar + marfil), títulos serif. */
 @theme {
-  --color-brand-50: #ecfdf5;
-  --color-brand-100: #d1fae5;
-  --color-brand-500: #10b981;
-  --color-brand-600: #059669;
-  --color-brand-700: #047857;
-  --color-ink: #0f172a;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+
+  --color-bg: #0c0a09;
+  --color-surface: #151210;
+  --color-surface-2: #1d1916;
+  --color-line: rgb(231 217 191 / 0.12);
+  --color-ink: #f5efe6;
+  --color-muted: #a69c8c;
+  --color-brand: #f59e0b;
+  --color-brand-soft: #fbbf24;
+  --color-brand-ink: #1a1200;
+  --color-ivory: #e7d9bf;
+  --color-positive: #a8c686;
+  --color-danger: #f87171;
+  --shadow-card: 0 8px 30px rgb(0 0 0 / 0.25);
+}
+
+/* Tema claro: papel cálido. Los acentos de texto se oscurecen para cumplir contraste AA. */
+:root[data-theme="light"] {
+  --color-bg: #faf6ef;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4ede0;
+  --color-line: rgb(60 40 10 / 0.14);
+  --color-ink: #1c1712;
+  --color-muted: #6b5f4e;
+  --color-brand: #f59e0b;
+  --color-brand-soft: #b45309;
+  --color-brand-ink: #1a1200;
+  --color-ivory: #6b5a3e;
+  --color-positive: #3f6b1f;
+  --color-danger: #b91c1c;
+  --shadow-card: 0 8px 30px rgb(80 55 10 / 0.1);
+  color-scheme: light;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #f8fafc;
+  background-color: var(--color-bg);
   color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  background-image:
+    radial-gradient(1000px 520px at 10% -12%, rgb(245 158 11 / 0.13), transparent 60%),
+    radial-gradient(800px 480px at 100% 0%, rgb(231 217 191 / 0.06), transparent 60%);
+  background-attachment: fixed;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  /* Los resplandores decorativos no deben generar scroll horizontal (clip no crea contenedor de scroll). */
+  overflow-x: clip;
+}
+
+:root[data-theme="light"] body {
+  background-image:
+    radial-gradient(1000px 520px at 10% -12%, rgb(245 158 11 / 0.16), transparent 60%),
+    radial-gradient(800px 480px at 100% 0%, rgb(180 83 9 / 0.06), transparent 60%);
+}
+
+/* Títulos y cifras grandes en serif; Instrument Serif solo existe en peso 400 (evita negrita sintética). */
+h1,
+h2,
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 400 !important;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: rgb(245 158 11 / 0.35);
+}
+
+/* Foco visible para teclado */
+:focus-visible {
+  outline: 2px solid var(--color-brand-soft);
+  outline-offset: 2px;
+}
+
+/* Skeleton */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  border-radius: 0.75rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-ink) 10%, transparent), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .skeleton::after {
+    animation: none;
+  }
+}
+
+/* Slider propio: riel con progreso (--p) y pulgar de marca; legible en ambos temas. */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-brand) var(--p, 20%), color-mix(in srgb, var(--color-ink) 18%, transparent) var(--p, 20%));
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-brand), 0 2px 8px rgb(0 0 0 / 0.3);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-brand);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-track {
+  background: transparent;
 }
